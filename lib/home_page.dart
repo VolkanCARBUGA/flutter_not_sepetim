@@ -18,54 +18,144 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var databaseHelper = DatabaseHelper();
-  var notes = Notes();
-  var notesList = <Notes>[];
   var categories = Category();
-  var categoriesList = <Category>[];
-  var scaffoldKey=GlobalKey<ScaffoldState>();
+  var notes = Notes();
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  var imageUrl = "assets/app_title.png";
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       key: scaffoldKey,
-        appBar: AppBar(
-          title: const Text('Flutter Not Sepetim'),
-          centerTitle: true,
+      appBar: AppBar(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          side: const BorderSide(color: Colors.green),
         ),
-        body: GetNotes(),
-        floatingActionButton:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          FloatingActionButton.extended(
-            heroTag: "tag2",
-            icon: const Icon(Icons.add_circle_outline_rounded),
-            backgroundColor: Colors.blue,
-            onPressed: () {
-              categoryDialog(context);
-            },
-            label: Text(
-              "Kategori Ekle",
-              style: GoogleFonts.tillana(
-                  fontSize: 17,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
+        toolbarHeight: 100,
+        backgroundColor: Colors.green,
+
+        title: Text(
+          "NOT SEPETİM",
+          style: GoogleFonts.tillana(
+            fontSize: 40,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
-          FloatingActionButton.extended(
-            heroTag: "tag1",
-              backgroundColor: Colors.green,
-              icon: const Icon(Icons.add_task_rounded),
-              onPressed: () {
-               goToDetailsPage();
-              },
-              label: Text(
-                "Not Ekle",
-                style: GoogleFonts.tillana(
-                    fontSize: 17,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              )),
-        ])
-        
-        );
+        ),
+        //Image.asset(imageUrl,fit: BoxFit.contain,width: 200,height: 100,),
+        centerTitle: true,
+        actions: [
+          PopupMenuButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+              side: const BorderSide(color: Colors.green),
+            ),
+            color: Colors.green,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                    child: ListTile(
+                  leading: Icon(Icons.category_outlined,color: Colors.white,),
+                  title: Text(
+                    "Kategoriler",
+                    style: GoogleFonts.tillana(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  onTap: () {
+                   getCategoryPage();
+                  },
+                )),
+              ];
+            },
+            onSelected: (value) {
+              if (value == "Çıkış") {
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
+      body: GetNotes(),
+      floatingActionButton: Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.7),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: buildButtons(context),
+      ),
+    );
+  }
+
+  Row buildButtons(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: const BorderSide(color: Colors.green),
+          ),
+          padding: const EdgeInsets.all(15),
+        ),
+        onPressed: () {
+          categoryDialog(context);
+        },
+        child: Text(
+          "Kategori Ekle",
+          style: GoogleFonts.tillana(
+              fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: const BorderSide(color: Colors.blue),
+            ),
+            padding: const EdgeInsets.all(15),
+          ),
+          onPressed: () {
+            goToDetailsPage(notes);
+          },
+          child: Text(
+            "Not Ekle",
+            style: GoogleFonts.tillana(
+                fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+          )),
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: const BorderSide(color: Colors.green),
+            ),
+            padding: const EdgeInsets.all(15),
+          ),
+          onPressed: () {
+            databaseHelper.getNotesList();
+            setState(() {});
+          },
+          child: Text(
+            "Yenile",
+            style: GoogleFonts.tillana(
+                fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+          ))
+    ]);
   }
 
   void categoryDialog(BuildContext context) {
@@ -131,8 +221,8 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.blue,
                         ),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
                     ),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
@@ -140,17 +230,25 @@ class _HomePageState extends State<HomePage> {
                         // String? categoryName = categories.categoryName;
                         if (await databaseHelper
                             .isCategoryExists(categoryName!)) {
-                          showSnackbar("Uyarı"," $categoryName Kategorisi zaten mevcut", ContentType.warning, Colors.red);
-                        }else {
-                          await databaseHelper.insertCategory(Category(
-                            categoryName:
-                                categoryName)).then((value) {
-                                categories.categoryId = value;
-                                });
-                        showSnackbar("Bilgi", "$categoryName Kategorisi eklendi id: ${categories.categoryId}", ContentType.success, Colors.green); 
+                          showSnackbar(
+                              "Uyarı",
+                              " $categoryName Kategorisi zaten mevcut",
+                              ContentType.warning,
+                              Colors.red);
+                        } else {
+                          await databaseHelper
+                              .insertCategory(
+                                  Category(categoryName: categoryName))
+                              .then((value) {
+                            categories.categoryId = value;
+                          });
+                          showSnackbar(
+                              "Bilgi",
+                              "$categoryName Kategorisi eklendi id: ${categories.categoryId}",
+                              ContentType.success,
+                              Colors.green);
                         }
-                      
-                        
+
                         Navigator.pop(context);
                       }
                     },
@@ -174,8 +272,8 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.blue,
                         ),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
                     ),
                     onPressed: () async {
                       Navigator.pop(context);
@@ -195,8 +293,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void showSnackbar(String title, String mesage, ContentType contentType,
-      Color color) {
+  void showSnackbar(
+      String title, String mesage, ContentType contentType, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           backgroundColor: Colors.white,
@@ -207,10 +305,19 @@ class _HomePageState extends State<HomePage> {
               contentType: contentType)),
     );
   }
-  void goToDetailsPage() {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>  NoteDetails(title: "Yeni Not",)),
-  );
+
+  void goToDetailsPage(Notes notes) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => NoteDetails(
+                title: "Yeni Not",
+                notes: notes,
+              )),
+    );
+  }
 }
+
+void getCategoryPage() {
+  
 }

@@ -10,7 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 class NoteDetails extends StatefulWidget {
   // Notes notes;
   String title;
-  NoteDetails({super.key, required this.title});
+  Notes notes;
+  NoteDetails({super.key, required this.title, required this.notes});
 
   @override
   State<NoteDetails> createState() => _NoteDetailsState();
@@ -20,8 +21,8 @@ class _NoteDetailsState extends State<NoteDetails> {
   var formKey = GlobalKey<FormState>();
   var allCategories = <Category>[];
   late DatabaseHelper databaseHelper;
-  int categoryId = 1;
-  int priority = 0;
+  int? categoryId ;
+  int? priority ;
   static var oncelik = ["Düşük", "Orta", "Yüksek"];
   String? noteTitle, noteContent;
   var currentDate = DateTime.now();
@@ -35,6 +36,14 @@ class _NoteDetailsState extends State<NoteDetails> {
       for (var category in value) {
         allCategories.add(Category.fromMap(category));
       }
+      if (widget.notes != null) {
+       categoryId = widget.notes.categoryId;
+       priority = widget.notes.notePriority;
+        
+      }else {
+        categoryId=1;
+        priority=1;
+      }
       setState(() {});
     });
   }
@@ -43,7 +52,7 @@ class _NoteDetailsState extends State<NoteDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: Colors.green,
           title: Text(
             widget.title,
             style: GoogleFonts.tillana(
@@ -103,6 +112,9 @@ class _NoteDetailsState extends State<NoteDetails> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            initialValue: widget.notes != null
+                                ? widget.notes.noteTitle
+                                : " ",
                             validator: (value) {
                               if (value!.isEmpty && value.length < 5) {
                                 return "Notunuz çok kısa yada boş";
@@ -130,6 +142,9 @@ class _NoteDetailsState extends State<NoteDetails> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            initialValue: widget.notes != null
+                                ? widget.notes.noteContent
+                                : " ",
                             onSaved: (newValue) {
                               noteContent = newValue;
                             },
@@ -219,8 +234,17 @@ class _NoteDetailsState extends State<NoteDetails> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
+                if (widget.notes == null) {
+                 saveNote();
+                   setState(() {});
+                }else {
+                   uodateNote();
+                     setState(() {});
+                  
+                }
 
-                saveNote();
+              
+              
               }
             },
             label: Text("Kaydet",
@@ -254,6 +278,24 @@ class _NoteDetailsState extends State<NoteDetails> {
                     fontSize: 15)),
           )
         ]);
+  }
+
+  void uodateNote() {
+     databaseHelper.updateNote(Notes.withId(
+        noteId: widget.notes.noteId,
+        noteTitle: noteTitle,
+        noteContent: noteContent,
+        noteCreatedTime: currentDate.toString(),
+        notePriority: priority,
+        categoryId: categoryId)).then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.white,
+            content: AwesomeSnackbarContent(
+                title: "Başarılı",
+                message: " $noteTitle Güncellendi",
+                contentType: ContentType.success))));
+                Navigator.pop(context);
+        
+
   }
 
   List<DropdownMenuItem<int>> dropDownMenuItem() {

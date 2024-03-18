@@ -69,8 +69,18 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getNotes() async {
     var db = await _getDatabase();
-    var result = await db!.query('notes', orderBy: 'noteCreatedTime desc');
+    var result = await db!.rawQuery(
+        'select * from notes inner join categories on notes.categoryId=categories.categoryId order by noteCreatedTime desc');
     return result;
+  }
+
+  Future<List<Notes>> getNotesList() async {
+    var categoryMapList = await getNotes();
+    var categoryList = <Notes>[];
+    for (var category in categoryMapList) {
+      categoryList.add(Notes.fromMap(category));
+    }
+    return categoryList;
   }
 
   Future<int> insertCategory(Category category) async {
@@ -192,11 +202,9 @@ class DatabaseHelper {
         case 7:
           return "Pazar";
       }
-
-    } else if(dateTime.year==today.year){
+    } else if (dateTime.year == today.year) {
       return "${dateTime.day} $month ";
-
-    }else{
+    } else {
       return "${dateTime.day} $month ${dateTime.year}";
     }
     return "";

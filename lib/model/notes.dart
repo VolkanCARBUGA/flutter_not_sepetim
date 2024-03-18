@@ -1,6 +1,7 @@
 class Notes {
   int? noteId;
   int? categoryId;
+  String?categoryName;
   String? noteTitle;
   String? noteContent;
   String? noteCreatedTime;
@@ -16,6 +17,7 @@ class Notes {
   Notes.withId(
       {this.noteId,
       this.categoryId,
+      this.categoryName,
       this.noteTitle,
       this.noteContent,
       this.noteCreatedTime,
@@ -44,6 +46,7 @@ class Notes {
   Notes.fromMap(Map<String, dynamic> map) {
     noteId = map['noteId'];
     categoryId = map['categoryId'];
+    categoryName = map['categoryName'];
     noteTitle = map['noteTitle'];
     noteContent = map['noteContent'];
     noteCreatedTime = map['noteCreatedTime'];
