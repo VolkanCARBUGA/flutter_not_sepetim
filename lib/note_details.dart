@@ -58,7 +58,7 @@ class _NoteDetailsState extends State<NoteDetails> {
        
           title: Text(
             widget.title,
-             style: GoogleFonts.tillana(
+           style: GoogleFonts.tillana(
             fontSize: 40,
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -236,7 +236,7 @@ class _NoteDetailsState extends State<NoteDetails> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(
-                  color: Colors.deepPurple,
+                  color: Colors.green,
                 ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -270,7 +270,7 @@ class _NoteDetailsState extends State<NoteDetails> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(
-                  color: Colors.deepPurple,
+                  color: Colors.red,
                 ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
