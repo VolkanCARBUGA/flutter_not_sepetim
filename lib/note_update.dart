@@ -7,22 +7,22 @@ import 'package:flutter_not_sepetim/model/notes.dart';
 import 'package:flutter_not_sepetim/utils/database_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NoteDetails extends StatefulWidget {
+class NoteUpdate extends StatefulWidget {
   // Notes notes;
   String title;
   Notes notes;
-  NoteDetails({super.key, required this.title, required this.notes});
+  NoteUpdate({super.key, required this.title, required this.notes});
 
   @override
-  State<NoteDetails> createState() => _NoteDetailsState();
+  State<NoteUpdate> createState() => _NoteUpdateState();
 }
 
-class _NoteDetailsState extends State<NoteDetails> {
+class _NoteUpdateState extends State<NoteUpdate> {
   var formKey = GlobalKey<FormState>();
   var allCategories = <Category>[];
   late DatabaseHelper databaseHelper;
-  int? categoryId=1 ;
-  int? priority=0 ;
+  int? categoryId =1;
+  int? priority =0;
   static var oncelik = ["Düşük", "Orta", "Yüksek"];
   String? noteTitle, noteContent;
   var currentDate = DateTime.now();
@@ -30,19 +30,22 @@ class _NoteDetailsState extends State<NoteDetails> {
   @override
   void initState() {
     super.initState();
-  allCategories = <Category>[];
-  databaseHelper = DatabaseHelper();
-  databaseHelper.getCategory().then((value) {
-    for (var category in value) {
-      allCategories.add(Category.fromMap(category.toMap()));
-    }
-    // Varsayılan kategori ve öncelik seçimi burada yapılabilir
-    if (allCategories.isNotEmpty) {
-      categoryId = allCategories.first.categoryId;
-    }
-    priority = 0; // Varsayılan olarak öncelik sırası düşük olarak ayarlandı
-    setState(() {});
-  });
+    allCategories = <Category>[];
+    databaseHelper = DatabaseHelper();
+    databaseHelper.getCategory().then((value) {
+      for (var category in value) {
+        allCategories.add(Category.fromMap(category.toMap()));
+      }
+      if (widget.notes != null) {
+       categoryId = widget.notes.categoryId;
+       priority = widget.notes.notePriority;
+        
+      }else {
+        categoryId=1;
+        priority=1;
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -50,12 +53,6 @@ class _NoteDetailsState extends State<NoteDetails> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green,
-          shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-          side: const BorderSide(color: Colors.green),
-        ),
-        toolbarHeight: 100,
-       
           title: Text(
             widget.title,
              style: GoogleFonts.tillana(
@@ -67,12 +64,12 @@ class _NoteDetailsState extends State<NoteDetails> {
           centerTitle: true,
         ),
         body: allCategories.isEmpty
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(),
               )
             : Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Form(
                     key: formKey,
                     child: Column(
@@ -197,11 +194,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                                       items: oncelik
                                           .map((e) => DropdownMenuItem(
                                               value: oncelik.indexOf(e),
-                                              child: Text(e,style: GoogleFonts.tillana(
-                                                fontSize: 15,
-                                                color: Colors.grey[600],
-                                                fontWeight: FontWeight.bold
-                                              ),)))
+                                              child: Text(e)))
                                           .toList(),
                                       onChanged: (value) {
                                         setState(() {
@@ -245,7 +238,7 @@ class _NoteDetailsState extends State<NoteDetails> {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
                 
-                  saveNote();
+                   uodateNote();
                      setState(() {});
                   
                 
@@ -287,7 +280,24 @@ class _NoteDetailsState extends State<NoteDetails> {
         ]);
   }
 
- 
+  void uodateNote() {
+     databaseHelper.updateNote(Notes.withId(
+        noteId: widget.notes.noteId,
+        noteTitle: noteTitle,
+        noteContent: noteContent,
+        noteCreatedTime: currentDate.toString(),
+        notePriority: priority,
+        categoryId: categoryId)).then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.white,
+            content: AwesomeSnackbarContent(
+                title: "Başarılı",
+                message: " $noteTitle Güncellendi",
+                contentType: ContentType.success))));
+                Navigator.pop(context);
+        
+
+  }
+
   List<DropdownMenuItem<int>> dropDownMenuItem() {
     var categoryList = <DropdownMenuItem<int>>[];
 
@@ -319,8 +329,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                 title: "Başarılı",
                 message: " $noteTitle Kaydedildi",
                 contentType: ContentType.success))));
-    print("Eklenen id: $categoryId Eklenen Tarih: $currentDate");
-    print("Eklewnen zamana: ${databaseHelper.dateFormat(currentDate)}");
+  
 
     Navigator.pop(context);
   }

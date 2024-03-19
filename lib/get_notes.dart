@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_not_sepetim/model/notes.dart';
-import 'package:flutter_not_sepetim/note_details.dart';
+import 'package:flutter_not_sepetim/note_update.dart';
 import 'package:flutter_not_sepetim/utils/database_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GetNotes extends StatefulWidget {
-  const GetNotes({Key? key}) : super(key: key);
+  const GetNotes({super.key});
 
   @override
   State<GetNotes> createState() => _GetNotesState();
@@ -68,17 +68,18 @@ class _GetNotesState extends State<GetNotes> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   alignment: Alignment.center,
-                                  title: Icon(
+                                  title: const Icon(
                                     Icons.delete,
                                     color: Colors.red,
                                     size: 100,
                                   ),
                                   content: Text(
+                                    textAlign: TextAlign.center,
                                     "${allNotes[index].noteTitle} silinsin mi?",
                                     style: GoogleFonts.tillana(
                                         color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17),
                                   ),
                                   actions: [
                                     ElevatedButton(
@@ -134,7 +135,7 @@ class _GetNotesState extends State<GetNotes> {
                       ));
                 });
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -148,7 +149,7 @@ class _GetNotesState extends State<GetNotes> {
         textAlign: TextAlign.center,
         allNotes[index].noteTitle.toString(),
         style: GoogleFonts.tillana(
-            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 17),
+            color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 17),
       ),
       children: [expansionTileItem(index)],
     );
@@ -157,7 +158,7 @@ class _GetNotesState extends State<GetNotes> {
   Container expansionTileItem(int index) {
     return Container(
       padding: const EdgeInsets.all(10),
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         children: [
           Row(
@@ -166,23 +167,23 @@ class _GetNotesState extends State<GetNotes> {
               Text(
                 "Kategori :",
                 style: GoogleFonts.tillana(
-                    color: Colors.black,
+                    color: Colors.black54,
                     fontWeight: FontWeight.bold,
                     fontSize: 17),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Text(
                 allNotes[index].categoryName.toString(),
                 style: GoogleFonts.tillana(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 17),
               ),
             ],
           ),
-          Divider(
+          const Divider(
             height: 10,
             thickness: 3,
             color: Colors.black,
@@ -193,24 +194,24 @@ class _GetNotesState extends State<GetNotes> {
               Text(
                 "Oluşturma Tarihi : ",
                 style: GoogleFonts.tillana(
-                    color: Colors.black,
+                    color: Colors.black54,
                     fontWeight: FontWeight.bold,
                     fontSize: 17),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Text(
                 databaseHelper.dateFormat(
                     DateTime.parse(allNotes[index].noteCreatedTime!)),
                 style: GoogleFonts.tillana(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 17),
               ),
             ],
           ),
-          Divider(
+          const Divider(
             height: 10,
             thickness: 3,
             color: Colors.black,
@@ -218,9 +219,9 @@ class _GetNotesState extends State<GetNotes> {
           Text(
             allNotes[index].noteContent.toString(),
             style: GoogleFonts.tillana(
-                color: Colors.black, fontWeight: FontWeight.w500, fontSize: 17),
+                color: Colors.white, fontWeight: FontWeight.w500, fontSize: 17),
           ),
-          Divider(
+          const Divider(
             height: 10,
             thickness: 3,
             color: Colors.black,
@@ -235,7 +236,7 @@ class _GetNotesState extends State<GetNotes> {
                         borderRadius: BorderRadius.circular(10),
                         side: const BorderSide(color: Colors.green),
                       )),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.update_sharp,
                     color: Colors.white,
                   ),
@@ -256,7 +257,7 @@ class _GetNotesState extends State<GetNotes> {
                         borderRadius: BorderRadius.circular(10),
                         side: const BorderSide(color: Colors.red),
                       )),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.delete_outline_outlined,
                     color: Colors.white,
                   ),
@@ -284,7 +285,7 @@ class _GetNotesState extends State<GetNotes> {
       builder: (context) {
         return AlertDialog(
           actionsAlignment: MainAxisAlignment.center,
-          icon: Icon(
+          icon: const Icon(
             Icons.warning,
             color: Colors.red,
           ),
@@ -311,7 +312,7 @@ class _GetNotesState extends State<GetNotes> {
                           borderRadius: BorderRadius.circular(10),
                           side: const BorderSide(color: Colors.red),
                         )),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete_sharp,
                       color: Colors.white,
                     ),
@@ -332,7 +333,7 @@ class _GetNotesState extends State<GetNotes> {
                           borderRadius: BorderRadius.circular(10),
                           side: const BorderSide(color: Colors.green),
                         )),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.cancel_outlined,
                       color: Colors.white,
                     ),
@@ -374,7 +375,7 @@ void goToDetailsPage(BuildContext context,Notes notes) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => NoteDetails(
+          builder: (context) => NoteUpdate(
                 title: "Notunu Düzenle",
                 notes: notes,
               )),

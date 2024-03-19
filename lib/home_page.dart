@@ -2,6 +2,7 @@
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_not_sepetim/category_page.dart';
 import 'package:flutter_not_sepetim/get_notes.dart';
 import 'package:flutter_not_sepetim/model/category.dart';
 import 'package:flutter_not_sepetim/model/notes.dart';
@@ -49,27 +50,12 @@ class _HomePageState extends State<HomePage> {
         actions: [
           PopupMenuButton(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(15),
               side: const BorderSide(color: Colors.green),
             ),
-            color: Colors.green,
+            color: Colors.white54,
             itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                    child: ListTile(
-                  leading: Icon(Icons.category_outlined,color: Colors.white,),
-                  title: Text(
-                    "Kategoriler",
-                    style: GoogleFonts.tillana(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  onTap: () {
-                   getCategoryPage();
-                  },
-                )),
-              ];
+              return popupMenuItem(context);
             },
             onSelected: (value) {
               if (value == "Çıkış") {
@@ -98,6 +84,25 @@ class _HomePageState extends State<HomePage> {
         child: buildButtons(context),
       ),
     );
+  }
+
+  List<PopupMenuItem<dynamic>> popupMenuItem(BuildContext context) {
+    return [
+      PopupMenuItem(
+          child: ListTile(
+        leading: Icon(Icons.category_outlined,color: Colors.black,),
+        title: Text(
+          "Kategoriler",
+          style: GoogleFonts.tillana(
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.w500),
+        ),
+        onTap: () {
+         getCategoryPage(context);
+        },
+      )),
+    ];
   }
 
   Row buildButtons(BuildContext context) {
@@ -142,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.red,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
-              side: const BorderSide(color: Colors.green),
+              side: const BorderSide(color: Colors.red),
             ),
             padding: const EdgeInsets.all(15),
           ),
@@ -318,6 +323,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-void getCategoryPage() {
+void getCategoryPage(BuildContext context) {
+  Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryPage()));
+
   
 }

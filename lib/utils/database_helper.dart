@@ -61,10 +61,10 @@ class DatabaseHelper {
     return await openDatabase(path, readOnly: false);
   }
 
-  Future<List<Map<String, dynamic>>> getCategory() async {
+  Future<List<Category>> getCategory() async {
     var db = await _getDatabase();
     var result = await db!.query('categories');
-    return result;
+    return result.map((e) => Category.fromMap( e)).toList();
   }
 
   Future<List<Map<String, dynamic>>> getNotes() async {
@@ -136,10 +136,10 @@ class DatabaseHelper {
   }
 
   String dateFormat(DateTime dateTime) {
-    DateTime today = new DateTime.now();
-    Duration oneDay = Duration(days: 1);
-    Duration twoDay = Duration(days: 2);
-    Duration oneWeek = Duration(days: 7);
+    DateTime today = DateTime.now();
+    Duration oneDay = const Duration(days: 1);
+    Duration twoDay = const Duration(days: 2);
+    Duration oneWeek = const Duration(days: 7);
     String? month;
     switch (dateTime.month) {
       case 1:
