@@ -7,6 +7,7 @@ import 'package:flutter_not_sepetim/get_notes.dart';
 import 'package:flutter_not_sepetim/model/category.dart';
 import 'package:flutter_not_sepetim/model/notes.dart';
 import 'package:flutter_not_sepetim/note_details.dart';
+import 'package:flutter_not_sepetim/notification_helper.dart';
 import 'package:flutter_not_sepetim/utils/database_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
       key: scaffoldKey,
       appBar: AppBar(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
           side: const BorderSide(color: Colors.green),
         ),
         toolbarHeight: 100,
@@ -159,7 +160,8 @@ class _HomePageState extends State<HomePage> {
             "Yenile",
             style: GoogleFonts.tillana(
                 fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-          ))
+          )),
+        
     ]);
   }
 

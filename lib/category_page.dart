@@ -37,7 +37,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
+           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
             side: const BorderSide(color: Colors.green),
           ),
           toolbarHeight: 100,

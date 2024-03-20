@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_not_sepetim/home_page.dart';
+import 'package:flutter_not_sepetim/notification_helper.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationHelper().initNotification();
+  NotificationHelper().flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+    AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
   runApp(const MyApp());
 }
 

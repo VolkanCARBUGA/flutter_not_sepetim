@@ -4,6 +4,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_not_sepetim/model/category.dart';
 import 'package:flutter_not_sepetim/model/notes.dart';
+import 'package:flutter_not_sepetim/notification_helper.dart';
 import 'package:flutter_not_sepetim/utils/database_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -51,7 +52,7 @@ class _NoteDetailsState extends State<NoteDetails> {
         appBar: AppBar(
           backgroundColor: Colors.green,
           shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
           side: const BorderSide(color: Colors.green),
         ),
         toolbarHeight: 100,
@@ -321,6 +322,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                 contentType: ContentType.success))));
     print("Eklenen id: $categoryId Eklenen Tarih: $currentDate");
     print("Eklewnen zamana: ${databaseHelper.dateFormat(currentDate)}");
+    NotificationHelper().showNotification( title: noteTitle!, body: noteContent!);
 
     Navigator.pop(context);
   }

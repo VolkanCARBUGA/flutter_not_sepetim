@@ -52,7 +52,12 @@ class _NoteUpdateState extends State<NoteUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.green,
+        backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
+          side: const BorderSide(color: Colors.green),
+        ),
+        toolbarHeight: 100,
           title: Text(
             widget.title,
              style: GoogleFonts.tillana(
